@@ -1,18 +1,14 @@
-import { useState, useEffect } from "react";
-import "./App.css";
+import { useEffect, useContext } from "react";
+import { AppContext } from "./Components/Contexts/AppContext";
 
-async function searchCases() {
-  const res = await fetch(`${netlify}/caseSearch`);
-  const data = await res.json();
-}
-
-const netlify = "/.netlify/functions";
+import "./assets/css/App.css";
 
 function App() {
-  const [cases, setCases] = useState([]);
+  const { searchCases, cases } = useContext(AppContext);
 
   useEffect(() => {
     searchCases();
+    cases && console.log(cases);
   }, []);
 
   return <></>;

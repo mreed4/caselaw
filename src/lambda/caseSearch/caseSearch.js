@@ -1,8 +1,8 @@
-// Docs on event and context https://docs.netlify.com/functions/build/#code-your-function-2
 const handler = async (event) => {
+  const { search } = event.queryStringParameters;
   const CASELAW_KEY = process.env.CASELAW_KEY;
 
-  const endpoint = "https://api.case.law/v1/cases/371071?full_case=true";
+  const endpoint = `https://api.case.law/v1/cases/?search=${search}&page_size=1`;
 
   const response = await fetch(endpoint, {
     headers: {
@@ -12,9 +12,27 @@ const handler = async (event) => {
 
   const data = await response.json();
 
-  console.log(data.casebody.data.opinions[0].text);
+  console.log(data);
 
-  return null;
+  if (!data) {
+    return {
+      statusCode: data.statusCode || 500,
+      body: JSON.stringify({ error: data.message }),
+    };
+  }
+
+  try {
+    return {
+      statusCode: 200,
+      body: JSON.stringify(data),
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      statusCode: data.statusCode || 500,
+      body: JSON.stringify({ error: err.message }),
+    };
+  }
 };
 
 module.exports = { handler };
