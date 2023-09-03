@@ -1,8 +1,9 @@
+// Docs on event and context https://docs.netlify.com/functions/build/#code-your-function-2
 const handler = async (event) => {
-  const { search } = event.queryStringParameters;
+  const { id } = event.queryStringParameters;
   const CASELAW_KEY = process.env.CASELAW_KEY;
 
-  const endpoint = `https://api.case.law/v1/cases/?search=${search}&page_size=30`;
+  const endpoint = `https://api.case.law/v1/cases/${id}/?full_case=true&body_format=html`;
 
   const response = await fetch(endpoint, {
     headers: {
